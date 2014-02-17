@@ -17,3 +17,7 @@ android {
 		targetSdkVersion 19
 	}
 }
+
+task runhello( type: Exec ) {
+    commandLine 'cmd', '/c', 'java -jar libs/yeti.jar src/main/yeti/hello.yeti'
+}
