@@ -18,6 +18,26 @@ android {
 	}
 }
 
-task runhello( type: Exec ) {
-    commandLine 'cmd', '/c', 'java -jar libs/yeti.jar src/main/yeti/hello.yeti'
+apply plugin: YetiPlugin
+
+yeti {
+    compilerPath = ''
+    libraryPath = ''
+}
+
+class YetiPlugin implements Plugin<Project> {
+    void apply(Project project) {
+        // Add the 'yeti' extension object
+        project.extensions.create("yeti", YetiPluginExtension)
+
+        // Add a task that uses the configuration
+        project.task( 'runYeti', type: Exec ) {
+            commandLine 'cmd', '/c', "java -jar ${project.yeti.compilerPath} src/main/yeti/hello.yeti"
+        }
+    }
+}
+
+class YetiPluginExtension {
+    def String compilerPath = 'libs/yeti.jar'
+    def String libraryPath = 'libs/yeti-lib.jar'
 }
