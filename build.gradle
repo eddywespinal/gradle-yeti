@@ -21,8 +21,7 @@ android {
 apply plugin: YetiPlugin
 
 yeti {
-    compilerPath = ''
-    libraryPath = ''
+    outputDir = 'target/hello'
 }
 
 class YetiPlugin implements Plugin<Project> {
@@ -34,10 +33,18 @@ class YetiPlugin implements Plugin<Project> {
         project.task( 'runYeti', type: Exec ) {
             commandLine 'cmd', '/c', "java -jar ${project.yeti.compilerPath} src/main/yeti/hello.yeti"
         }
+
+        // Add a task that uses the configuration
+        project.task( 'compileYeti', type: Exec ) {
+        	compilerPath { project.yeti.compilerPath }
+        	outputDir { project.yeti.outputDir }
+            commandLine 'cmd', '/c', "java -jar ${compilerPath} -d ${outputDir} src/main/yeti/hello.yeti"
+        }
     }
 }
 
 class YetiPluginExtension {
     def String compilerPath = 'libs/yeti.jar'
     def String libraryPath = 'libs/yeti-lib.jar'
+    def String outputDir
 }
